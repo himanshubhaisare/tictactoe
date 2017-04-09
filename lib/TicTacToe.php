@@ -12,7 +12,7 @@ class TicTacToe
         return self::$_instance;
     }
 
-    public function play($request) {
+    public function handle($request) {
         return true;
     }
 }

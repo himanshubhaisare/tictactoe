@@ -22,12 +22,12 @@ class Server {
      */
     public function handle($request) {
         $valid = Validator::validate($request);
-        if ($valid) {
+        if ($valid === true) {
             $ticTacToe = TicTacToe::getInstance();
-            $result = $ticTacToe->play($request);
-            $result = $this->respond($result);
+            $result = $ticTacToe->handle($request);
+            $result = $this->respond($request);
         } else {
-            $result = $this->error($request);
+            $result = $this->error($valid);
         }
 
         return $result;
@@ -47,7 +47,7 @@ class Server {
         | X | O | X |
         ```";
         $result = array(
-            "response_type" => "ephemeral",
+            "response_type" => "in_channel",
             "text" => $cannedResult
         );
 
@@ -57,13 +57,13 @@ class Server {
     }
 
     /**
-     * @param $request
+     * @param $message
      * @return string
      */
-    public function error($request) {
+    public function error($message) {
         $error = array(
-            "response_type" => "ephemeral",
-            "text" => "Sorry, that didn't work. Please try again."
+            "response_type" => "in_channel",
+            "text" => !empty($message) ? $message : "Sorry, that didn't work. Please try again."
         );
 
         $this->setResponseHeaders();
@@ -107,6 +107,6 @@ class Server {
     }
 
     public function setErrorCode() {
-        header("HTTP/1.1 400 OK");
+        header("HTTP/1.1 400 Bad Request");
     }
 }
