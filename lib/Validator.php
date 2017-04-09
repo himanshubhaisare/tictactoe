@@ -5,6 +5,7 @@ require_once 'Commands.php';
 class Validator {
 
     private $request;
+
     private $errors;
 
     public function __construct($request) {

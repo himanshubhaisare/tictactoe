@@ -39,14 +39,6 @@ class Server {
      * @return string
      */
     public function respond($result) {
-        $cannedResult = "
-        ```
-        | X | O | O |
-        |---+---+---|
-        | O | X | X |
-        |---+---+---|
-        | X | O | X |
-        ```";
         $result = array(
             "response_type" => "in_channel",
             "text" => $result
@@ -80,29 +72,28 @@ class Server {
     /**
      * Example headers from reddit api
      *
-            accept-ranges:bytes
-            access-control-allow-origin:*
-            access-control-expose-headers:X-Reddit-Tracking, X-Moose
-            cache-control:max-age=0, must-revalidate
-            content-encoding:gzip
-            content-length:6902
-            content-type:application/json; charset=UTF-8
-            date:Sun, 09 Apr 2017 02:38:48 GMT
-            status:200
-            strict-transport-security:max-age=15552000; includeSubDomains; preload
-            vary:accept-encoding
-            via:1.1 varnish
-            x-cache:MISS
-            x-cache-hits:0
-            x-content-type-options:nosniff
-            x-frame-options:SAMEORIGIN
-            x-moose:majestic
-            x-reddit-tracking:https://pixel.redditmedia.com/pixel/of_destiny.png?v=GXmqXGu%2FTPDTXoGKtiQ1XXpMolpvUHvm5h5lplAQcBOoKPEn8cEEHX991%2BKUAKCcafETsSl%2Fsx6mfA%2BgHw2RWPZAYVvfaMKm
-            x-served-by:cache-sjc3141-SJC
-            x-timer:S1491705528.290535,VS0,VE230
-            x-ua-compatible:IE=edge
-            x-xss-protection:1; mode=block
-
+        accept-ranges:bytes
+        access-control-allow-origin:*
+        access-control-expose-headers:X-Reddit-Tracking, X-Moose
+        cache-control:max-age=0, must-revalidate
+        content-encoding:gzip
+        content-length:6902
+        content-type:application/json; charset=UTF-8
+        date:Sun, 09 Apr 2017 02:38:48 GMT
+        status:200
+        strict-transport-security:max-age=15552000; includeSubDomains; preload
+        vary:accept-encoding
+        via:1.1 varnish
+        x-cache:MISS
+        x-cache-hits:0
+        x-content-type-options:nosniff
+        x-frame-options:SAMEORIGIN
+        x-moose:majestic
+        x-reddit-tracking:https://pixel.redditmedia.com/pixel/of_destiny.png?v=GXmqXGu%2FTPDTXoGKtiQ1XXpMolpvUHvm5h5lplAQcBOoKPEn8cEEHX991%2BKUAKCcafETsSl%2Fsx6mfA%2BgHw2RWPZAYVvfaMKm
+        x-served-by:cache-sjc3141-SJC
+        x-timer:S1491705528.290535,VS0,VE230
+        x-ua-compatible:IE=edge
+        x-xss-protection:1; mode=block
      */
     public function setResponseHeaders() {
         header("Content-Type: application/json; charset=UTF-8");

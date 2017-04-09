@@ -22,48 +22,65 @@ class TicTacToe
         $arg = $text[1];
         switch ($command) {
             case Commands::$HELP:
-                $resuult = $this->help();
+                $result = $this->help();
                 break;
             case Commands::$MOVE:
-                $resuult = $this->move();
+                $result = $this->move($arg);
                 break;
             case Commands::$CHALLENGE:
-                $resuult = $this->challenge();
+                $result = $this->challenge($arg);
                 break;
             case Commands::$STATUS:
-                $resuult = $this->status();
+                $result = $this->status();
                 break;
             case Commands::$END:
-                $resuult = $this->end();
+                $result = $this->end();
                 break;
             default:
                 break;
         }
 
-        return $resuult;
-    }
-
-    private function help() {
-        $result = "```\n
-    Tic Tac Toe commands manual:\n\n
-    /ttt help : brings up the help menu\n
-    /ttt move <position> : make your move on given position 1 to 9\n
-    /ttt challenge @user : challenge @user for a tic tac toe game\n
-    /ttt status : current game status\n
-    /ttt end : ends current game```";
         return $result;
     }
 
-    private function move() {
+    private function help() {
+        $result = "
+        ```
+        Tic Tac Toe commands manual:
+        /ttt help : brings up the help menu
+        /ttt move <position> : make your move on given position 1 to 9
+        /ttt challenge @user : challenge @user for a tic tac toe game
+        /ttt status : current game status
+        /ttt end : ends current game
+        ```";
+        return $result;
+    }
+
+    private function move($position) {
 
     }
 
-    private function challenge() {
+    private function challenge($user) {
 
     }
+
     private function status() {
-
+        $currentState = "
+        ```
+        @user1 and @user2 wre playing.
+        
+        | X | O | O |
+        |---+---+---|
+        | O | X | X |
+        |---+---+---|
+        | X | O | X |
+        
+        @user2 won.
+        
+        ```";
+        return $currentState;
     }
+
     private function end() {
 
     }
