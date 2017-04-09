@@ -21,13 +21,14 @@ class Server {
      * @return array|bool|string
      */
     public function handle($request) {
-        $valid = Validator::validate($request);
-        if ($valid === true) {
+        $validator = new Validator($request);
+        if ($validator->validate()) {
             $ticTacToe = TicTacToe::getInstance();
             $result = $ticTacToe->handle($request);
-            $result = $this->respond($request);
+            $result = $this->respond($result);
         } else {
-            $result = $this->error($valid);
+            $errors = $validator->getErrors();
+            $result = $this->error($errors);
         }
 
         return $result;
@@ -48,7 +49,7 @@ class Server {
         ```";
         $result = array(
             "response_type" => "in_channel",
-            "text" => $cannedResult
+            "text" => $result
         );
 
         $this->setResponseHeaders();
@@ -57,13 +58,18 @@ class Server {
     }
 
     /**
-     * @param $message
+     * @param $messages
      * @return string
      */
-    public function error($message) {
+    public function error($messages) {
+        $singleMessage = "";
+        foreach ($messages as $message) {
+            $singleMessage .= $message. "\n";
+        }
+
         $error = array(
             "response_type" => "in_channel",
-            "text" => !empty($message) ? $message : "Sorry, that didn't work. Please try again."
+            "text" => !empty($singleMessage) ? $singleMessage : "Sorry, that didn't work. Please try again."
         );
 
         $this->setResponseHeaders();
