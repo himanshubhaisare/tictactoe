@@ -36,6 +36,7 @@ class Validator {
 
         $this->isValidCommand($command, $arg);
         $this->isMyTurn($command, $user);
+        $this->isGameInProgress();
 //        $this->challengingSelf($command, $user, $arg);
         if ($command === 'help') {
             $this->request['text'] = $command;
@@ -63,12 +64,20 @@ class Validator {
         }
     }
 
+    /**
+     * @return bool
+     */
     private function isNoOnePlaying() {
-        return true;
+        $db = Database::getInstance();
+        $game = $db->getGameState();
+        return empty($game);
     }
 
     private function isGameInProgress() {
-        return !$this->isNoOnePlaying();
+        $gameInProgress = !$this->isNoOnePlaying();
+        if ($gameInProgress) {
+            $this->errors[] = "Another game is in progress. Please wait for it to end or `/ttt end` to force end.";
+        }
     }
 
     /**
