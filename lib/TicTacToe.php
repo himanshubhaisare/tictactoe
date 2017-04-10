@@ -1,7 +1,6 @@
 <?php
 
-class TicTacToe
-{
+class TicTacToe {
 
     private static $_instance;
 
@@ -28,7 +27,7 @@ class TicTacToe
                 $result = $this->move($arg);
                 break;
             case Commands::$CHALLENGE:
-                $result = $this->challenge($arg);
+                $result = $this->challenge($request['user_name'], $arg);
                 break;
             case Commands::$STATUS:
                 $result = $this->status();
@@ -60,8 +59,34 @@ class TicTacToe
 
     }
 
-    private function challenge($user) {
+    private function challenge($challenger, $opponent) {
+        $db = Database::getInstance();
+        $game = $db->clearGameState();
+        $game[Game::$CHALLENGER] = "@$challenger";
+        $game[Game::$OPPONENT] = $opponent;
+        $game[Game::$CHALLENGER_TIC] = Game::$X;
+        $game[Game::$OPPONENT_TIC] = Game::$O;
+        $game[Game::$WHOSTURN] = $challenger;
+        $db->setGameState($game);
+        $result = "
+        ```
+        @$challenger has challenged $opponent for Tic Tac Toe!
+        @$challenger is {$game[Game::$CHALLENGER_TIC]}
+        $opponent is {$game[Game::$OPPONENT_TIC]}
+        
+        Current game state:
+        
+        |   |   |   |
+        |---+---+---|
+        |   |   |   |
+        |---+---+---|
+        |   |   |   |
+        
+        @$challenger turn to play.
+        ```
+        ";
 
+        return $result;
     }
 
     private function status() {

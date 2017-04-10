@@ -36,4 +36,13 @@ class Database {
         file_put_contents(self::$_store, $store);
         $this->gameState = $gameState;
     }
+
+    /**
+     * Clears game state
+     * @return mixed
+     */
+    public function clearGameState() {
+        $this->setGameState([]);
+        return $this->getGameState();
+    }
 }

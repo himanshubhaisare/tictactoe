@@ -36,6 +36,7 @@ class Validator {
 
         $this->isValidCommand($command, $arg);
         $this->isMyTurn($command, $user);
+//        $this->challengingSelf($command, $user, $arg);
         if ($command === 'help') {
             $this->request['text'] = $command;
             $this->errors = array();
@@ -49,10 +50,8 @@ class Validator {
     /**
      * @param $command
      * @param $user
-     * @return bool
      */
     private function isMyTurn($command, $user) {
-        $result = true;
         if (!in_array($command, array(Commands::$HELP, Commands::$STATUS))) {
             $db = Database::getInstance();
             $gameState = $db->getGameState();
@@ -62,8 +61,6 @@ class Validator {
                 }
             }
         }
-
-        return $result;
     }
 
     private function isNoOnePlaying() {
@@ -77,10 +74,8 @@ class Validator {
     /**
      * @param $command
      * @param $arg
-     * @return bool
      */
     private function isValidCommand($command, $arg) {
-        $result = true;
         if (!in_array($command, array(Commands::$CHALLENGE, Commands::$END, Commands::$HELP, Commands::$MOVE, Commands::$STATUS))) {
             $this->errors[] = "$command is not a valid command. `/ttt help` for manual.";
         }
@@ -98,7 +93,17 @@ class Validator {
                 }
             }
         }
+    }
 
-        return $result;
+    /**
+     * @param $command
+     * @param $challenger
+     * @param $opponent
+     */
+    private function challengingSelf($command, $challenger, $opponent) {
+        $opponent = str_replace('@', '', $opponent);
+        if (($command === Commands::$CHALLENGE) && ($challenger === $opponent)) {
+            $this->errors[] = "Cannot challenge yourself $challenger.";
+        }
     }
 }
