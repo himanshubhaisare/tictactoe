@@ -52,11 +52,11 @@ class Validator {
      * @param $user
      */
     private function isMyTurn($command, $user) {
-        if (!in_array($command, array(Commands::$HELP, Commands::$STATUS))) {
+        if (!in_array($command, array(Commands::$HELP, Commands::$STATUS, Commands::$END))) {
             $db = Database::getInstance();
-            $gameState = $db->getGameState();
+            $game = $db->getGameState();
             if (!empty($gameState)) {
-                if ($gameState['whosturn'] !== $user) {
+                if ($game[Game::$WHOSTURN] !== $user) {
                     $this->errors[] = "@$user, this is not your turn. Please wait for your turn.";
                 }
             }

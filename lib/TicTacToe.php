@@ -42,6 +42,9 @@ class TicTacToe {
         return $result;
     }
 
+    /**
+     * @return string
+     */
     private function help() {
         $result = "
         ```
@@ -59,6 +62,11 @@ class TicTacToe {
 
     }
 
+    /**
+     * @param $challenger
+     * @param $opponent
+     * @return string
+     */
     private function challenge($challenger, $opponent) {
         $db = Database::getInstance();
         $game = $db->clearGameState();
@@ -67,6 +75,9 @@ class TicTacToe {
         $game[Game::$CHALLENGER_TIC] = Game::$X;
         $game[Game::$OPPONENT_TIC] = Game::$O;
         $game[Game::$WHOSTURN] = $challenger;
+        for ($i = 1; $i < 10; $i++) {
+            $game[Game::$MOVES][$i] = " ";
+        }
         $db->setGameState($game);
         $result = "
         ```
@@ -89,24 +100,68 @@ class TicTacToe {
         return $result;
     }
 
+    /**
+     * @return string
+     */
     private function status() {
-        $currentState = "
-        ```
-        @user1 and @user2 wre playing.
-        
-        | X | O | O |
-        |---+---+---|
-        | O | X | X |
-        |---+---+---|
-        | X | O | X |
-        
-        @user2 won.
-        
-        ```";
-        return $currentState;
+        $db = Database::getInstance();
+        $game = $db->getGameState();
+        if (!empty($game)) {
+            $result = "
+            ```
+            {$game[Game::$CHALLENGER]} is playing Tic Tac Toe with {$game[Game::$OPPONENT]}.
+            {$game[Game::$CHALLENGER]} is {$game[Game::$CHALLENGER_TIC]}
+            {$game[Game::$OPPONENT]} is {$game[Game::$OPPONENT_TIC]}
+            
+            Current game state:
+            
+            | {$game[Game::$MOVES][1]} | {$game[Game::$MOVES][2]} | {$game[Game::$MOVES][3]} |
+            |---+---+---|
+            | {$game[Game::$MOVES][4]} | {$game[Game::$MOVES][5]} | {$game[Game::$MOVES][6]} |
+            |---+---+---|
+            | {$game[Game::$MOVES][7]} | {$game[Game::$MOVES][8]} | {$game[Game::$MOVES][9]} |
+            
+            {$game[Game::$WHOSTURN]} turn to play.
+            ```
+            ";
+        } else{
+            $result = "```No one is playing.```";
+        }
+
+        return $result;
     }
 
+    /**
+     * @return string
+     */
     private function end() {
+        $db = Database::getInstance();
+        $game = $db->getGameState();
+        $db->clearGameState();
+        if (!empty($game)) {
+            $result = "
+            ```
+            {$game[Game::$CHALLENGER]} was playing Tic Tac Toe with {$game[Game::$OPPONENT]}.
+            {$game[Game::$CHALLENGER]} was {$game[Game::$CHALLENGER_TIC]}
+            {$game[Game::$OPPONENT]} was {$game[Game::$OPPONENT_TIC]}
+            
+            Last game state:
+            
+            | {$game[Game::$MOVES][1]} | {$game[Game::$MOVES][2]} | {$game[Game::$MOVES][3]} |
+            |---+---+---|
+            | {$game[Game::$MOVES][4]} | {$game[Game::$MOVES][5]} | {$game[Game::$MOVES][6]} |
+            |---+---+---|
+            | {$game[Game::$MOVES][7]} | {$game[Game::$MOVES][8]} | {$game[Game::$MOVES][9]} |
+            
+            {$game[Game::$RESULT]}
+            
+            Game ended.
+            ```
+            ";
+        } else {
+            $result = "```No one is playing.```";
+        }
 
+        return $result;
     }
 }
