@@ -38,6 +38,10 @@ class Validator {
         $this->isMyTurn($command, $user);
         $this->isGameInProgress($command);
         $this->validateMove($command, $user, $arg);
+        if (in_array($command, array(Commands::$HELP, Commands::$STATUS))) {
+            $this->request['text'] = $command;
+            $this->errors = array();
+        }
 
         if (empty($this->errors)) {
             return true;
