@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Commands.php';
-require_once DOCROOT . 'store/Database.php';
-
 class Validator {
 
     private $request;
@@ -28,6 +25,9 @@ class Validator {
         return $this->errors;
     }
 
+    /**
+     * @return bool
+     */
     public function validate() {
         $user = $this->request['user_name'];
         $text = explode(' ', $this->request['text']);
@@ -46,6 +46,11 @@ class Validator {
         }
     }
 
+    /**
+     * @param $command
+     * @param $user
+     * @return bool
+     */
     private function isMyTurn($command, $user) {
         $result = true;
         if (!in_array($command, array(Commands::$HELP, Commands::$STATUS))) {
@@ -69,6 +74,11 @@ class Validator {
         return !$this->isNoOnePlaying();
     }
 
+    /**
+     * @param $command
+     * @param $arg
+     * @return bool
+     */
     private function isValidCommand($command, $arg) {
         $result = true;
         if (!in_array($command, array(Commands::$CHALLENGE, Commands::$END, Commands::$HELP, Commands::$MOVE, Commands::$STATUS))) {
@@ -78,10 +88,10 @@ class Validator {
             if (empty($arg)) {
                 switch ($command) {
                     case Commands::$MOVE:
-                        $this->errors[] = "$command command also needs position 1 to 9. e.g. `/ttt move 5`.`/ttt help` for manual.";
+                        $this->errors[] = "$command command also needs position 1 to 9. e.g. `/ttt move 5` or`/ttt help` for manual.";
                         break;
                     case Commands::$CHALLENGE:
-                        $this->errors[] = "$command command also needs user to be challenged. e.g. `/ttt challenge @user`. `/ttt help` for manual.";
+                        $this->errors[] = "$command command also needs user to be challenged. e.g. `/ttt challenge @user` or `/ttt help` for manual.";
                         break;
                     default:
                         break;
