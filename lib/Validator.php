@@ -36,12 +36,8 @@ class Validator {
 
         $this->isValidCommand($command, $arg);
         $this->isMyTurn($command, $user);
-        $this->isGameInProgress();
-//        $this->challengingSelf($command, $user, $arg);
-        if ($command === 'help') {
-            $this->request['text'] = $command;
-            $this->errors = array();
-        }
+        $this->isGameInProgress($command);
+        $this->validateMove($command, $user, $arg);
 
         if (empty($this->errors)) {
             return true;
@@ -53,7 +49,7 @@ class Validator {
      * @param $user
      */
     private function isMyTurn($command, $user) {
-        if (!in_array($command, array(Commands::$HELP, Commands::$STATUS, Commands::$END))) {
+        if (in_array($command, array(Commands::$MOVE, Commands::$CHALLENGE))) {
             $db = Database::getInstance();
             $game = $db->getGameState();
             if (!empty($gameState)) {
@@ -65,17 +61,13 @@ class Validator {
     }
 
     /**
-     * @return bool
+     * @param $command
      */
-    private function isNoOnePlaying() {
+    private function isGameInProgress($command) {
         $db = Database::getInstance();
         $game = $db->getGameState();
-        return empty($game);
-    }
-
-    private function isGameInProgress() {
-        $gameInProgress = !$this->isNoOnePlaying();
-        if ($gameInProgress) {
+        $gameInProgress = !empty($game);
+        if ($gameInProgress && $command === Commands::$CHALLENGE) {
             $this->errors[] = "Another game is in progress. Please wait for it to end or `/ttt end` to force end.";
         }
     }
@@ -99,6 +91,29 @@ class Validator {
                         break;
                     default:
                         break;
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $command
+     * @param $player
+     * @param $position
+     */
+    private function validateMove($command, $player, $position) {
+        if ($command === Commands::$MOVE) {
+            //1. cannot move <1 and >9
+            if (empty($position) || $position < 1 || $position > 9) {
+                $this->errors[] = "$command <position> where position is between 1 to 9. e.g. `/ttt move 5`";
+            } else {
+                //2. cannot move where position is already occupied
+                $db = Database::getInstance();
+                $game = $db->getGameState();
+                if ($game[Game::$MOVES][$position] == Game::$X || $game[Game::$MOVES][$position] == Game::$O) {
+                    $this->errors[] = "tile $position is already taken. Please play again.";
+                    $game[Game::$WHOSTURN] = "@$player";
+                    $db->setGameState($game);
                 }
             }
         }

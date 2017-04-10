@@ -24,7 +24,7 @@ class TicTacToe {
                 $result = $this->help();
                 break;
             case Commands::$MOVE:
-                $result = $this->move($arg);
+                $result = $this->move($request['user_name'], $arg);
                 break;
             case Commands::$CHALLENGE:
                 $result = $this->challenge($request['user_name'], $arg);
@@ -58,8 +58,48 @@ class TicTacToe {
         return $result;
     }
 
-    private function move($position) {
+    /**
+     * @param $player
+     * @param $position
+     * @return string
+     */
+    private function move($player, $position) {
+        $db = Database::getInstance();
+        $game = $db->getGameState();
+        if (!empty($game)) {
+            if ($game[Game::$CHALLENGER] == "@$player") {
+                $tic = $game[Game::$CHALLENGER_TIC];
+            } else {
+                $tic = $game[Game::$OPPONENT_TIC];
+            }
+            $game[Game::$MOVES][$position] = $tic;
+            $game[Game::$WHOSTURN] = "@$player";
+            $db->setGameState($game);
 
+            $result = "
+            ```
+            {$game[Game::$CHALLENGER]} is playing Tic Tac Toe with {$game[Game::$OPPONENT]}.
+            {$game[Game::$CHALLENGER]} is {$game[Game::$CHALLENGER_TIC]}
+            {$game[Game::$OPPONENT]} is {$game[Game::$OPPONENT_TIC]}
+            
+            $player played $tic at $position.
+            
+            Current game state:
+            
+            | {$game[Game::$MOVES][1]} | {$game[Game::$MOVES][2]} | {$game[Game::$MOVES][3]} |
+            |---+---+---|
+            | {$game[Game::$MOVES][4]} | {$game[Game::$MOVES][5]} | {$game[Game::$MOVES][6]} |
+            |---+---+---|
+            | {$game[Game::$MOVES][7]} | {$game[Game::$MOVES][8]} | {$game[Game::$MOVES][9]} |
+            
+            {$game[Game::$WHOSTURN]} turn to play.
+            ```
+            ";
+        } else {
+            $result = "```No one is playing.```";
+        }
+
+        return $result;
     }
 
     /**
@@ -75,8 +115,10 @@ class TicTacToe {
         $game[Game::$CHALLENGER_TIC] = Game::$X;
         $game[Game::$OPPONENT_TIC] = Game::$O;
         $game[Game::$WHOSTURN] = $challenger;
+        $game[Game::$RESULT] = "";
+
         for ($i = 1; $i < 10; $i++) {
-            $game[Game::$MOVES][$i] = " ";
+            $game[Game::$MOVES][$i] = $i;
         }
         $db->setGameState($game);
         $result = "
@@ -87,11 +129,11 @@ class TicTacToe {
         
         Current game state:
         
-        |   |   |   |
+        | {$game[Game::$MOVES][1]} | {$game[Game::$MOVES][2]} | {$game[Game::$MOVES][3]} |
         |---+---+---|
-        |   |   |   |
+        | {$game[Game::$MOVES][4]} | {$game[Game::$MOVES][5]} | {$game[Game::$MOVES][6]} |
         |---+---+---|
-        |   |   |   |
+        | {$game[Game::$MOVES][7]} | {$game[Game::$MOVES][8]} | {$game[Game::$MOVES][9]} |
         
         @$challenger turn to play.
         ```
