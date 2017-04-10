@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Commands.php';
+require_once DOCROOT . 'store/Database.php';
 
 class Validator {
 
@@ -30,20 +31,34 @@ class Validator {
     public function validate() {
         $user = $this->request['user_name'];
         $text = explode(' ', $this->request['text']);
-        $command = $text[0];
-        $arg = $text[1];
+        $command = ($text[0] == '') ? 'help' : $text[0];
+        $arg = isset($text[1])? $text[1] : null;
+
         $this->isValidCommand($command, $arg);
         $this->isMyTurn($command, $user);
+        if ($command === 'help') {
+            $this->request['text'] = $command;
+            $this->errors = array();
+        }
+
         if (empty($this->errors)) {
             return true;
         }
     }
 
     private function isMyTurn($command, $user) {
-        if(false) {
-            $this->errors[] = "@$user, this is not your turn. Please wait for your turn";
+        $result = true;
+        if (!in_array($command, array(Commands::$HELP, Commands::$STATUS))) {
+            $db = Database::getInstance();
+            $gameState = $db->getGameState();
+            if (!empty($gameState)) {
+                if ($gameState['whosturn'] !== $user) {
+                    $this->errors[] = "@$user, this is not your turn. Please wait for your turn.";
+                }
+            }
         }
-        return true;
+
+        return $result;
     }
 
     private function isNoOnePlaying() {
@@ -57,16 +72,16 @@ class Validator {
     private function isValidCommand($command, $arg) {
         $result = true;
         if (!in_array($command, array(Commands::$CHALLENGE, Commands::$END, Commands::$HELP, Commands::$MOVE, Commands::$STATUS))) {
-            $this->errors[] = "$command is not a valid command. ```/ttt help``` for manual.";
+            $this->errors[] = "$command is not a valid command. `/ttt help` for manual.";
         }
         if (in_array($command, array(Commands::$MOVE, Commands::$CHALLENGE))) {
             if (empty($arg)) {
                 switch ($command) {
                     case Commands::$MOVE:
-                        $this->errors[] = "$command command also needs position 1 to 9. ```/ttt help``` for manual.";
+                        $this->errors[] = "$command command also needs position 1 to 9. e.g. `/ttt move 5`.`/ttt help` for manual.";
                         break;
                     case Commands::$CHALLENGE:
-                        $this->errors[] = "$command command also needs user to be challenged. ```/ttt help``` for manual.";
+                        $this->errors[] = "$command command also needs user to be challenged. e.g. `/ttt challenge @user`. `/ttt help` for manual.";
                         break;
                     default:
                         break;

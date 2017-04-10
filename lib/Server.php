@@ -24,7 +24,7 @@ class Server {
         $validator = new Validator($request);
         if ($validator->validate()) {
             $ticTacToe = TicTacToe::getInstance();
-            $result = $ticTacToe->handle($request);
+            $result = $ticTacToe->handle($validator->getRequest());
             $result = $this->respond($result);
         } else {
             $errors = $validator->getErrors();

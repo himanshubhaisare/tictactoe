@@ -19,7 +19,7 @@ class TicTacToe
     public function handle($request) {
         $text = explode(' ', $request['text']);
         $command = $text[0];
-        $arg = $text[1];
+        $arg = isset($text[1])? $text[1] : null;
         switch ($command) {
             case Commands::$HELP:
                 $result = $this->help();
