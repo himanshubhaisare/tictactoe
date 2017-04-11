@@ -1,25 +1,11 @@
 # Tic Tac Toe
-
 This is a server side code for a custom slack 'slash command' that allows users to play tic tac toe in slack.
 
-## Summary ##
+## Commands ##
+Tic Tac Toe commands manual:
 
-Create a slash command /ttt to play tic-tac-toe within Slack. If you’re unfamiliar with the rules, check them out at https://en.wikipedia.org/wiki/Tic-tac-toe. The display as well as the slash command syntax the users must use is entirely up to you. We'd like to see where you take this basic idea!
-SAMPLE TIC TAC TOE BOARD
-Feel free to use this board as a starting point, or design your own:
-```
-| X | O | O |
-|---+---+---|
-| O | X | X |
-|---+---+---|
-| X | O | X |
-```
-
-## Requirements ##
-
-1. Users can create a new game in any Slack channel by challenging another user (using their @username).
-2. A channel can have at most one game being played at a time.
-3. Anyone in the channel can run a command to display the current board and list whose turn it is.
-4. Users can specify their next move, which also publicly displays the board in the channel after the move with a reminder of whose turn it is.
-5. Only the user whose turn it is can make the next move.
-6. When a turn is taken that ends the game, the response indicates this along with who won.
+1. /ttt help : brings up the help menu
+2. /ttt move <position> : make your move on given position 1 to 9. e.g. `/ttt move 4`
+3. /ttt challenge @user : challenge @user for a tic tac toe game. e.g. `/ttt challenge @himanshu`
+4. /ttt status : current game status
+5. /ttt end : ends current game
