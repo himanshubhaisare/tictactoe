@@ -6,7 +6,6 @@ class Game {
     public static $OPPONENT = 'opponent';
     public static $WHOSTURN = 'whosturn';
     public static $LASTMOVE = 'lastmove';
-    public static $GAMEOVER = 'gameover';
     public static $RESULT = 'result';
     public static $MOVES = 'moves';
     public static $COUNT = 'count';

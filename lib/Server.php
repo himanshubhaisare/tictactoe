@@ -61,7 +61,7 @@ class Server {
 
         $error = array(
             "response_type" => "in_channel",
-            "text" => !empty($singleMessage) ? $singleMessage : "Sorry, that didn't work. Please try again."
+            "text" => !empty($singleMessage) ? "```$singleMessage```" : "```Sorry, that didn't work. Please try again.```"
         );
 
         $this->setResponseHeaders();
