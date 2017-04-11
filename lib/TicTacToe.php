@@ -47,14 +47,14 @@ class TicTacToe {
      */
     private function help() {
         $result = "
-        ```
-        Tic Tac Toe commands manual:
-        /ttt help : brings up the help menu
-        /ttt move <position> : make your move on given position 1 to 9
-        /ttt challenge @user : challenge @user for a tic tac toe game
-        /ttt status : current game status
-        /ttt end : ends current game
-        ```";
+    ```
+    Tic Tac Toe commands manual:
+    /ttt help : brings up the help menu
+    /ttt move <position> : make your move on given position 1 to 9
+    /ttt challenge @user : challenge @user for a tic tac toe game
+    /ttt status : current game status
+    /ttt end : ends current game
+    ```";
         return $result;
     }
 
@@ -256,8 +256,8 @@ class TicTacToe {
             array(3, 5, 7)
         );
 
-        // minimum 5 moves played, possible winner in game.
-        if ($game[Game::$COUNT] > 4) {
+        // minimum 3 moves played, possible winner in game.
+        if ($game[Game::$COUNT] > 2) {
             foreach ($winningCombinations as $combination) {
                 $threePlaceMove = "";
                 foreach ($combination as $move) {

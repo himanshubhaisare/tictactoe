@@ -114,10 +114,12 @@ class Validator {
                 //2. cannot move where position is already occupied
                 $db = Database::getInstance();
                 $game = $db->getGameState();
-                if ($game[Game::$MOVES][$position] == Game::$X || $game[Game::$MOVES][$position] == Game::$O) {
-                    $this->errors[] = "tile $position is already taken.";
-                    $game[Game::$WHOSTURN] = "@$player";
-                    $db->setGameState($game);
+                if (!empty($game)) {
+                    if ($game[Game::$MOVES][$position] == Game::$X || $game[Game::$MOVES][$position] == Game::$O) {
+                        $this->errors[] = "tile $position is already taken.";
+                        $game[Game::$WHOSTURN] = "@$player";
+                        $db->setGameState($game);
+                    }
                 }
             }
         }
