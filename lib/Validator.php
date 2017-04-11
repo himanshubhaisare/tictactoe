@@ -56,8 +56,8 @@ class Validator {
         if (in_array($command, array(Commands::$MOVE, Commands::$CHALLENGE))) {
             $db = Database::getInstance();
             $game = $db->getGameState();
-            if (!empty($gameState)) {
-                if ($game[Game::$WHOSTURN] !== $user) {
+            if (!empty($game)) {
+                if ($game[Game::$WHOSTURN] !== "@$user") {
                     $this->errors[] = "@$user, this is not your turn. Please wait for your turn.";
                 }
             }
@@ -115,7 +115,7 @@ class Validator {
                 $db = Database::getInstance();
                 $game = $db->getGameState();
                 if ($game[Game::$MOVES][$position] == Game::$X || $game[Game::$MOVES][$position] == Game::$O) {
-                    $this->errors[] = "tile $position is already taken. Please play again.";
+                    $this->errors[] = "tile $position is already taken.";
                     $game[Game::$WHOSTURN] = "@$player";
                     $db->setGameState($game);
                 }

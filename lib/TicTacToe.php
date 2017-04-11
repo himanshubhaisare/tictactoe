@@ -69,11 +69,12 @@ class TicTacToe {
         if (!empty($game)) {
             if ($game[Game::$CHALLENGER] == "@$player") {
                 $tic = $game[Game::$CHALLENGER_TIC];
+                $game[Game::$WHOSTURN] = $game[Game::$OPPONENT];
             } else {
                 $tic = $game[Game::$OPPONENT_TIC];
+                $game[Game::$WHOSTURN] = $game[Game::$CHALLENGER];
             }
             $game[Game::$MOVES][$position] = $tic;
-            $game[Game::$WHOSTURN] = "@$player";
             $db->setGameState($game);
 
             $result = "
