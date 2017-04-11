@@ -9,6 +9,7 @@ class Game {
     public static $GAMEOVER = 'gameover';
     public static $RESULT = 'result';
     public static $MOVES = 'moves';
+    public static $COUNT = 'count';
     public static $X = 'x';
     public static $O = 'o';
     public static $CHALLENGER_TIC = 'challenger_tic';
