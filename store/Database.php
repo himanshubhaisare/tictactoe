@@ -4,7 +4,7 @@ class Database {
 
     private $gameState;
 
-    private static $_store = DOCROOT . 'store/gamestate.json';
+    private static $_store = 'store/gamestate.json';
 
     private static $_instance;
 
