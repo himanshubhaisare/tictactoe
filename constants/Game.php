@@ -14,5 +14,4 @@ class Game {
     public static $CHALLENGER_TIC = 'challenger_tic';
     public static $OPPONENT_TIC = 'opponent_tic';
     public static $DRAW = 'draw';
-
 }

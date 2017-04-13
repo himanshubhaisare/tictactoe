@@ -277,7 +277,7 @@ class TicTacToe {
             }
         }
 
-        // game ran out of moves and no winner
+        // game ran out of moves and no winner.
         if ($game[Game::$COUNT] >= 9 && $winner == null) {
             $winner = Game::$DRAW;
         }
