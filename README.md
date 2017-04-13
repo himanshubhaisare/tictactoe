@@ -10,6 +10,10 @@ Tic Tac Toe commands manual:
 4. `/ttt status` : current game status
 5. `/ttt end` : ends current game
 
+## Tests ##
+How to run tests ? Go to this url to run tests.
+    http://himanshu-bhaisare.chatly.io/tests/
+    
 Example output when user hits `/ttt challenge @himanshu`
 ```
     @himanshu2 has challenged @himanshu for Tic Tac Toe!
@@ -46,7 +50,21 @@ Example output when game is over.
     @himanshu2 won! GAME OVER!
 ```
 
-
-## Tests ##
-How to run tests ? Go to this url to run tests.
-`http://himanshu-bhaisare.chatly.io/tests/`
+Example output when game is draw.
+```
+    @himanshu2 is playing Tic Tac Toe with @himanshu.
+    @himanshu2 is X
+    @himanshu is O
+    
+    himanshu2 played X at 8.
+    
+    Current game state:
+    
+    | X | O | X |
+    |---+---+---|
+    | X | O | O |
+    |---+---+---|
+    | O | X | X |
+    
+    It's a DRAW! GAME OVER!
+``` 
