@@ -6,61 +6,56 @@ class MySql {
     const PASS = 'root';
     const HOST = 'localhost';
     const PORT = 3306;
-    const DB = ' tictactoe';
-    const TIME_LIMIT = 0; // No time limit
-    const MEMORY_LIMIT = -1; // No memory limit
+    const DB = 'tictactoe';
 
-    protected static $_AFFECTED_ROWS = 0; // Counter for rows affected
-    protected $_mysqli = NULL;
+    private static $_AFFECTED_ROWS = 0; // Counter for rows affected
+    private static $_instance;
+    private static $_connection;
 
     /**
-     * No time limit, No memory limit
+     * @return MySql
      */
-    public function init() {
-        set_time_limit(self::TIME_LIMIT);
-        ini_set('memory_limit', self::MEMORY_LIMIT);
+    public static function getInstance() {
+        if (is_null(self::$_instance)) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
     }
 
     /**
-     * Destruct
+     * Initializes the connection
+     */
+    public function __construct() {
+        $this->initConnection();
+    }
+
+    /**
+     * Destructs the connection
      */
     public function __destruct() {
-        $this->getMysqli()->close();
+        $this->getConnection()->close();
     }
 
     /**
-     * Gets mysqli handler
+     * Gets the Mysqli handler
      *
      * @param bool $forceReload
      * @return mysqli
      */
-    public function getMysqli($forceReload = FALSE) {
-        if ( $forceReload || is_null($this->_mysqli) ) {
-            $this->initMysqli();
+    protected function getConnection($forceReload = FALSE) {
+        if ( $forceReload || is_null(self::$_connection) || !self::$_connection->ping() ) {
+            // If force-reload or connection hasn't been initialized yet or if connection was initialized but got lost, then (re-)initialize
+            $this->initConnection();
         }
 
-        //this will reconnect if the connection was closed
-        if ( !$this->_mysqli->ping() ) {
-            $this->initMysqli();
-        }
-
-        return $this->_mysqli;
+        return self::$_connection;
     }
 
     /**
-     * Establish connection to mysql db
+     * Initializes the connection
      */
-    protected function initMysqli() {
-        $this->_mysqli = new mysqli(self::HOST, self::USER, self::PASS, self::DB);
-    }
-
-    /**
-     * Sets mysql handler
-     *
-     * @param mysqli $mysqli
-     */
-    public function setMysqli(mysqli $mysqli) {
-        $this->_mysqli = $mysqli;
+    protected function initConnection() {
+        self::$_connection = new mysqli(self::HOST, self::USER, self::PASS, self::DB);
     }
 
     /**
@@ -69,7 +64,7 @@ class MySql {
      */
     public function executeQuery($query) {
         $status = FALSE;
-        $mysqli = $this->getMysqli();
+        $mysqli = $this->getConnection();
         $query = str_replace(array("\n", "\r"), '', $query);
         $result = $mysqli->query($query);
         if(!$result) {
@@ -92,11 +87,10 @@ class MySql {
      * @return bool|mysqli_result
      */
     public function executeQueryAndGetResult($query) {
-        $mysqli = $this->getMysqli();
+        $mysqli = $this->getConnection();
         $query = str_replace(array("\n", "\r"), '', $query);
         $result = $mysqli->query($query);
 
         return $result;
     }
-
 }
