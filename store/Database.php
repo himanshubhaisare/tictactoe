@@ -4,7 +4,7 @@ class Database {
 
     private $gameState;
 
-    private static $_store = 'store/gamestate.json';
+    private $_store;
 
     private static $_instance;
 
@@ -20,10 +20,17 @@ class Database {
     }
 
     /**
+     * Database constructor.
+     */
+    public function __construct() {
+        $this->_store = dirname(__FILE__). '/gamestate.json';
+    }
+
+    /**
      * @return mixed
      */
     public function getGameState() {
-        $store = file_get_contents(self::$_store);
+        $store = file_get_contents($this->_store);
         $this->gameState = json_decode($store, true);
         return $this->gameState;
     }
@@ -33,7 +40,7 @@ class Database {
      */
     public function setGameState($gameState) {
         $store = json_encode($gameState);
-        file_put_contents(self::$_store, $store);
+        file_put_contents($this->_store, $store);
         $this->gameState = $gameState;
     }
 
