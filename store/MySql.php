@@ -84,13 +84,35 @@ class MySql {
 
     /**
      * @param $query
-     * @return bool|mysqli_result
+     * @return mixed
      */
     public function executeQueryAndGetResult($query) {
         $mysqli = $this->getConnection();
         $query = str_replace(array("\n", "\r"), '', $query);
         $result = $mysqli->query($query);
+        $resultArray = $result->fetch_all(MYSQLI_ASSOC);
 
-        return $result;
+        return $resultArray;
+    }
+
+    /**
+     * @param $user
+     * @return mixed
+     */
+    public function persistUser($user) {
+        $query = "INSERT INTO user ('name') VALUES ('$user')";
+        $this->executeQuery($query);
+        $user = $this->getUser($user);
+        return $user;
+    }
+
+    /**
+     * @param $userName
+     * @return mixed
+     */
+    public function getUser($userName) {
+        $query = "SELECT * FROM user where name = '$userName';";
+        $user = $this->executeQueryAndGetResult($query);
+        return $user;
     }
 }

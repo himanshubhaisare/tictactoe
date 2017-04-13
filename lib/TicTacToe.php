@@ -65,8 +65,6 @@ class TicTacToe {
      */
     private function move($player, $position) {
         $db = Database::getInstance();
-        $mysqli = new MySql();
-        $activeGame =
         $game = $db->getGameState();
         if (!empty($game)) {
             if ($game[Game::$CHALLENGER] == "@$player") {
