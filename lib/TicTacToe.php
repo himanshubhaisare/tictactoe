@@ -81,7 +81,11 @@ class TicTacToe {
             if ($winner != null) {
                 // game over!
                 $db->clearGameState();
-                $game[Game::$RESULT] = "$winner won! GAME OVER!";
+                if ($winner == Game::$DRAW) {
+                    $game[Game::$RESULT] = "It's a DRAW! GAME OVER!";
+                } else {
+                    $game[Game::$RESULT] = "$winner won! GAME OVER!";
+                }
                 $result = "
     ```
     {$game[Game::$CHALLENGER]} is playing Tic Tac Toe with {$game[Game::$OPPONENT]}.
@@ -123,7 +127,6 @@ class TicTacToe {
     ```
                 ";
             }
-
         } else {
             $result = "```No one is playing.```";
         }
@@ -272,6 +275,11 @@ class TicTacToe {
                     break;
                 }
             }
+        }
+
+        // game ran out of moves and no winner
+        if ($game[Game::$COUNT] >= 9 && $winner == null) {
+            $winner = Game::$DRAW;
         }
 
         return $winner;
